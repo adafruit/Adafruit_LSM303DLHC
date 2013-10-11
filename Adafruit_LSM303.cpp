@@ -116,9 +116,9 @@ void Adafruit_LSM303_Accel::read()
   #endif    
 
   // Shift values to create properly formed integer (low byte first)
-  _accelData.x = (xlo | (xhi << 8)) >> 4;
-  _accelData.y = (ylo | (yhi << 8)) >> 4;
-  _accelData.z = (zlo | (zhi << 8)) >> 4;
+  _accelData.x = (int16_t)((xlo | (xhi << 8)) >> 4);
+  _accelData.y = (int16_t)((ylo | (yhi << 8)) >> 4);
+  _accelData.z = (int16_t)((zlo | (zhi << 8)) >> 4);
 }
 
 /***************************************************************************
