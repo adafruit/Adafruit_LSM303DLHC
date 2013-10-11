@@ -286,9 +286,9 @@ void Adafruit_LSM303_Mag::read()
   #endif
   
   // Shift values to create properly formed integer (low byte first)
-  _magData.x = (xlo | (xhi << 8));
-  _magData.y = (ylo | (yhi << 8));
-  _magData.z = (zlo | (zhi << 8));  
+  _magData.x = (int16_t)(xlo | (xhi << 8));
+  _magData.y = (int16_t)(ylo | (yhi << 8));
+  _magData.z = (int16_t)(zlo | (zhi << 8));  
   
   // ToDo: Calculate orientation
   _magData.orientation = 0.0;
