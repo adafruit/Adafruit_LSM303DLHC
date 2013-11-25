@@ -39,7 +39,7 @@ static float _lsm303Mag_Gauss_LSB_Z  = 980.0F;   // Varies with gain
     @brief  Abstract away platform differences in Arduino wire library
 */
 /**************************************************************************/
-void Adafruit_LSM303_Accel::write8(byte address, byte reg, byte value)
+void Adafruit_LSM303_Accel_Unified::write8(byte address, byte reg, byte value)
 {
   Wire.beginTransmission(address);
   #if ARDUINO >= 100
@@ -57,7 +57,7 @@ void Adafruit_LSM303_Accel::write8(byte address, byte reg, byte value)
     @brief  Abstract away platform differences in Arduino wire library
 */
 /**************************************************************************/
-byte Adafruit_LSM303_Accel::read8(byte address, byte reg)
+byte Adafruit_LSM303_Accel_Unified::read8(byte address, byte reg)
 {
   byte value;
 
@@ -84,7 +84,7 @@ byte Adafruit_LSM303_Accel::read8(byte address, byte reg)
     @brief  Reads the raw data from the sensor
 */
 /**************************************************************************/
-void Adafruit_LSM303_Accel::read()
+void Adafruit_LSM303_Accel_Unified::read()
 {
   // Read the accelerometer
   Wire.beginTransmission((byte)LSM303_ADDRESS_ACCEL);
@@ -130,7 +130,7 @@ void Adafruit_LSM303_Accel::read()
     @brief  Instantiates a new Adafruit_LSM303 class
 */
 /**************************************************************************/
-Adafruit_LSM303_Accel::Adafruit_LSM303_Accel(int32_t sensorID) {
+Adafruit_LSM303_Accel_Unified::Adafruit_LSM303_Accel_Unified(int32_t sensorID) {
   _sensorID = sensorID;
 }
 
@@ -143,7 +143,7 @@ Adafruit_LSM303_Accel::Adafruit_LSM303_Accel(int32_t sensorID) {
     @brief  Setups the HW
 */
 /**************************************************************************/
-bool Adafruit_LSM303_Accel::begin()
+bool Adafruit_LSM303_Accel_Unified::begin()
 {
   // Enable I2C
   Wire.begin();
@@ -159,7 +159,7 @@ bool Adafruit_LSM303_Accel::begin()
     @brief  Gets the most recent sensor event
 */
 /**************************************************************************/
-void Adafruit_LSM303_Accel::getEvent(sensors_event_t *event) {
+void Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
   
@@ -180,7 +180,7 @@ void Adafruit_LSM303_Accel::getEvent(sensors_event_t *event) {
     @brief  Gets the sensor_t data
 */
 /**************************************************************************/
-void Adafruit_LSM303_Accel::getSensor(sensor_t *sensor) {
+void Adafruit_LSM303_Accel_Unified::getSensor(sensor_t *sensor) {
   /* Clear the sensor_t object */
   memset(sensor, 0, sizeof(sensor_t));
 
@@ -208,7 +208,7 @@ void Adafruit_LSM303_Accel::getSensor(sensor_t *sensor) {
     @brief  Abstract away platform differences in Arduino wire library
 */
 /**************************************************************************/
-void Adafruit_LSM303_Mag::write8(byte address, byte reg, byte value)
+void Adafruit_LSM303_Mag_Unified::write8(byte address, byte reg, byte value)
 {
   Wire.beginTransmission(address);
   #if ARDUINO >= 100
@@ -226,7 +226,7 @@ void Adafruit_LSM303_Mag::write8(byte address, byte reg, byte value)
     @brief  Abstract away platform differences in Arduino wire library
 */
 /**************************************************************************/
-byte Adafruit_LSM303_Mag::read8(byte address, byte reg)
+byte Adafruit_LSM303_Mag_Unified::read8(byte address, byte reg)
 {
   byte value;
 
@@ -253,7 +253,7 @@ byte Adafruit_LSM303_Mag::read8(byte address, byte reg)
     @brief  Reads the raw data from the sensor
 */
 /**************************************************************************/
-void Adafruit_LSM303_Mag::read()
+void Adafruit_LSM303_Mag_Unified::read()
 {
   // Read the magnetometer
   Wire.beginTransmission((byte)LSM303_ADDRESS_MAG);
@@ -303,7 +303,7 @@ void Adafruit_LSM303_Mag::read()
     @brief  Instantiates a new Adafruit_LSM303 class
 */
 /**************************************************************************/
-Adafruit_LSM303_Mag::Adafruit_LSM303_Mag(int32_t sensorID) {
+Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) {
   _sensorID = sensorID;
 }
 
@@ -316,7 +316,7 @@ Adafruit_LSM303_Mag::Adafruit_LSM303_Mag(int32_t sensorID) {
     @brief  Setups the HW
 */
 /**************************************************************************/
-bool Adafruit_LSM303_Mag::begin()
+bool Adafruit_LSM303_Mag_Unified::begin()
 {
   // Enable I2C
   Wire.begin();
@@ -335,7 +335,7 @@ bool Adafruit_LSM303_Mag::begin()
     @brief  Sets the magnetometer's gain
 */
 /**************************************************************************/
-void Adafruit_LSM303_Mag::setMagGain(lsm303MagGain gain)
+void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
 {
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRB_REG_M, (byte)gain);
   
@@ -379,7 +379,7 @@ void Adafruit_LSM303_Mag::setMagGain(lsm303MagGain gain)
     @brief  Gets the most recent sensor event
 */
 /**************************************************************************/
-void Adafruit_LSM303_Mag::getEvent(sensors_event_t *event) {
+void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
 
@@ -400,7 +400,7 @@ void Adafruit_LSM303_Mag::getEvent(sensors_event_t *event) {
     @brief  Gets the sensor_t data
 */
 /**************************************************************************/
-void Adafruit_LSM303_Mag::getSensor(sensor_t *sensor) {
+void Adafruit_LSM303_Mag_Unified::getSensor(sensor_t *sensor) {
   /* Clear the sensor_t object */
   memset(sensor, 0, sizeof(sensor_t));
 

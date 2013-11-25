@@ -133,10 +133,10 @@
 /*=========================================================================*/
 
 /* Unified sensor driver for the accelerometer */
-class Adafruit_LSM303_Accel : public Adafruit_Sensor
+class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
 {
   public:
-    Adafruit_LSM303_Accel(int32_t sensorID = -1);
+    Adafruit_LSM303_Accel_Unified(int32_t sensorID = -1);
   
     bool begin(void);
     void getEvent(sensors_event_t*);
@@ -152,10 +152,10 @@ class Adafruit_LSM303_Accel : public Adafruit_Sensor
 };
 
 /* Unified sensor driver for the magnetometer */
-class Adafruit_LSM303_Mag : public Adafruit_Sensor
+class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
 {
   public:
-    Adafruit_LSM303_Mag(int32_t sensorID = -1);
+    Adafruit_LSM303_Mag_Unified(int32_t sensorID = -1);
   
     bool begin(void);
     void setMagGain(lsm303MagGain gain);

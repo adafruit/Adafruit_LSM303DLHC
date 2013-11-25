@@ -3,7 +3,7 @@
 #include <Adafruit_LSM303.h>
 
 /* Assign a unique ID to this sensor at the same time */
-Adafruit_LSM303_Accel accel = Adafruit_LSM303_Accel(54321);
+Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(54321);
 
 void displaySensorDetails(void)
 {
