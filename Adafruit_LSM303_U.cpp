@@ -148,8 +148,8 @@ bool Adafruit_LSM303_Accel_Unified::begin()
   // Enable I2C
   Wire.begin();
 
-  // Enable the accelerometer
-  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x27);
+  // Enable the accelerometer (100Hz)
+  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x57);
   
   return true;
 }
@@ -169,7 +169,7 @@ void Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
   event->version   = sizeof(sensors_event_t);
   event->sensor_id = _sensorID;
   event->type      = SENSOR_TYPE_ACCELEROMETER;
-  event->timestamp = 0;
+  event->timestamp = millis();
   event->acceleration.x = _accelData.x * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
   event->acceleration.y = _accelData.y * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
   event->acceleration.z = _accelData.z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
@@ -305,6 +305,7 @@ void Adafruit_LSM303_Mag_Unified::read()
 /**************************************************************************/
 Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) {
   _sensorID = sensorID;
+  _autoRangeEnabled = false;
 }
 
 /***************************************************************************
@@ -328,6 +329,16 @@ bool Adafruit_LSM303_Mag_Unified::begin()
   setMagGain(LSM303_MAGGAIN_1_3);
 
   return true;
+}
+
+/**************************************************************************/
+/*! 
+    @brief  Enables or disables auto-ranging
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Mag_Unified::enableAutoRange(bool enabled)
+{
+  _autoRangeEnabled = enabled;
 }
 
 /**************************************************************************/
@@ -380,16 +391,81 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
 */
 /**************************************************************************/
 void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
+  bool readingValid = false;
+  
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
-
-  /* Read new data */
-  read();
+  
+  while(!readingValid)
+  {
+    /* Read new data */
+    read();
+    
+    /* Make sure the sensor isn't saturating if auto-ranging is enabled */
+    if (!_autoRangeEnabled)
+    {
+      readingValid = true;
+    }
+    else
+    {
+      Serial.print(_magData.x); Serial.print(" ");
+      Serial.print(_magData.y); Serial.print(" ");
+      Serial.print(_magData.z); Serial.println(" ");
+      /* Check if the sensor is saturating or not */
+      if ( (_magData.x >= 4090) | (_magData.x <= -4090) | 
+           (_magData.y >= 4090) | (_magData.y <= -4090) | 
+           (_magData.z >= 4090) | (_magData.z <= -4090) )
+      {
+        /* Saturating .... increase the range if we can */
+        switch(_magGain)
+        {
+          case LSM303_MAGGAIN_5_6:
+            setMagGain(LSM303_MAGGAIN_8_1);
+            readingValid = false;
+            Serial.println("Changing range to +/- 8.1");
+            break;
+          case LSM303_MAGGAIN_4_7:
+            setMagGain(LSM303_MAGGAIN_5_6);
+            readingValid = false;
+            Serial.println("Changing range to +/- 5.6");
+            break;
+          case LSM303_MAGGAIN_4_0:
+            setMagGain(LSM303_MAGGAIN_4_7);
+            readingValid = false;
+            Serial.println("Changing range to +/- 4.7");
+            break;
+          case LSM303_MAGGAIN_2_5:
+            setMagGain(LSM303_MAGGAIN_4_0);
+            readingValid = false;
+            Serial.println("Changing range to +/- 4.0");
+            break;
+          case LSM303_MAGGAIN_1_9:
+            setMagGain(LSM303_MAGGAIN_2_5);
+            readingValid = false;
+            Serial.println("Changing range to +/- 2.5");
+            break;
+          case LSM303_MAGGAIN_1_3:
+            setMagGain(LSM303_MAGGAIN_1_9);
+            readingValid = false;
+            Serial.println("Changing range to +/- 1.9");
+            break;
+          default:
+            readingValid = true;
+            break;  
+        }
+      }
+      else
+      {
+        /* All values are withing range */
+        readingValid = true;
+      }
+    }
+  }
   
   event->version   = sizeof(sensors_event_t);
   event->sensor_id = _sensorID;
   event->type      = SENSOR_TYPE_MAGNETIC_FIELD;
-  event->timestamp = 0;
+  event->timestamp = millis();
   event->magnetic.x = _magData.x / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
   event->magnetic.y = _magData.y / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
   event->magnetic.z = _magData.z / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;

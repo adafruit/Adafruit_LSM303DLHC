@@ -26,6 +26,9 @@ void setup(void)
   Serial.begin(9600);
   Serial.println("Magnetometer Test"); Serial.println("");
   
+  /* Enable auto-gain */
+  mag.enableAutoRange(true);
+  
   /* Initialise the sensor */
   if(!mag.begin())
   {
