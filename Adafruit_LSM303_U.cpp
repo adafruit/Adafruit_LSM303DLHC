@@ -336,7 +336,7 @@ bool Adafruit_LSM303_Mag_Unified::begin()
   // LSM303DLHC has no WHOAMI register so read CRA_REG_M to check
   // the default value (0b00010000/0x10)
   uint8_t reg1_a = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M);
-  if (reg1_a != 0x11)
+  if (reg1_a != 0x10)
   {
     return false;
   }
