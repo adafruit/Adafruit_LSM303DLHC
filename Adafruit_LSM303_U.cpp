@@ -388,7 +388,7 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
       break;
     case LSM303_MAGGAIN_4_7:
       _lsm303Mag_Gauss_LSB_XY = 400;
-      _lsm303Mag_Gauss_LSB_Z  = 255;
+      _lsm303Mag_Gauss_LSB_Z  = 355;
       break;
     case LSM303_MAGGAIN_5_6:
       _lsm303Mag_Gauss_LSB_XY = 330;
@@ -428,9 +428,9 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
       Serial.print(_magData.y); Serial.print(" ");
       Serial.print(_magData.z); Serial.println(" ");
       /* Check if the sensor is saturating or not */
-      if ( (_magData.x >= 4090) | (_magData.x <= -4090) | 
-           (_magData.y >= 4090) | (_magData.y <= -4090) | 
-           (_magData.z >= 4090) | (_magData.z <= -4090) )
+      if ( (_magData.x >= 2040) | (_magData.x <= -2040) | 
+           (_magData.y >= 2040) | (_magData.y <= -2040) | 
+           (_magData.z >= 2040) | (_magData.z <= -2040) )
       {
         /* Saturating .... increase the range if we can */
         switch(_magGain)
