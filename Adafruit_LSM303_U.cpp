@@ -164,6 +164,52 @@ bool Adafruit_LSM303_Accel_Unified::begin()
 
 /**************************************************************************/
 /*!
+    @brief  Enables DRDY on INT1
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Accel_Unified::enableInt1DataReady(bool enabled)
+{
+  byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG3_A);
+
+  // Set/unset I1_DRDY1
+  if (enabled) {
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG3_A, existing |= 1<<4);
+  } else {
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG3_A, existing &= ~(1<<4));
+  }
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets the Output Data Rate
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Accel_Unified::setOutputDataRate(lsm303AccelODR odr)
+{
+  byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A);
+
+  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing |= odr<<4);
+}
+
+/**************************************************************************/
+/*!
+    @brief  Enables Low Power mode
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Accel_Unified::enableLowPower(bool enabled)
+{
+  byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A);
+
+  // Set/unset LPen
+  if (enabled) {
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing |= 1<<3);
+  } else {
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing &= ~(1<<3));
+  }
+}
+
+/**************************************************************************/
+/*!
     @brief  Gets the most recent sensor event
 */
 /**************************************************************************/
@@ -333,8 +379,10 @@ bool Adafruit_LSM303_Mag_Unified::begin()
   // Enable the magnetometer
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_MR_REG_M, 0x00);
 
-  // LSM303DLHC has no WHOAMI register so read CRA_REG_M to check
-  // the default value (0b00010000/0x10)
+  // Reset the default ODR
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, 0x10);
+
+  // LSM303DLHC has no WHOAMI register so read CRA_REG_M back to check
   uint8_t reg1_a = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M);
   if (reg1_a != 0x10)
   {
@@ -399,6 +447,18 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
       _lsm303Mag_Gauss_LSB_Z  = 205;
       break;
   }
+}
+
+/**************************************************************************/
+/*!
+    @brief  Sets the Output Data Rate
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Mag_Unified::setOutputDataRate(lsm303MagODR odr)
+{
+  byte existing = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M);
+
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, existing |= odr<<2);
 }
 
 /**************************************************************************/

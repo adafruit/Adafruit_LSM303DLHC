@@ -89,6 +89,25 @@
 /*=========================================================================*/
 
 /*=========================================================================
+    ACCELEROMETER OUTPUT DATA RATE SETTINGS
+    -----------------------------------------------------------------------*/
+    typedef enum
+    {
+      LSM303_ACCEL_ODR_OFF                      = 0x00, // Power-down mode
+      LSM303_ACCEL_ODR_1                        = 0x01, // Normal / low-power mode (1 Hz)
+      LSM303_ACCEL_ODR_10                       = 0x02, // Normal / low-power mode (10 Hz)
+      LSM303_ACCEL_ODR_25                       = 0x03, // Normal / low-power mode (25 Hz)
+      LSM303_ACCEL_ODR_50                       = 0x04, // Normal / low-power mode (50 Hz)
+      LSM303_ACCEL_ODR_100                      = 0x05, // Normal / low-power mode (100 Hz)
+      LSM303_ACCEL_ODR_200                      = 0x06, // Normal / low-power mode (200 Hz)
+      LSM303_ACCEL_ODR_400                      = 0x07, // Normal / low-power mode (400 Hz)
+      LSM303_ACCEL_ODR_1344                     = 0x09, // Normal (1.344 kHz) / low-power mode (5.376 KHz)
+      LSM303_ACCEL_ODR_1620                     = 0x08, // Low-power mode (1.620 KHz)
+      LSM303_ACCEL_ODR_5376                     = 0x09, // Normal (1.344 kHz) / low-power mode (5.376 KHz)
+    } lsm303AccelODR;
+/*=========================================================================*/
+
+/*=========================================================================
     MAGNETOMETER GAIN SETTINGS
     -----------------------------------------------------------------------*/
     typedef enum
@@ -101,6 +120,22 @@
       LSM303_MAGGAIN_5_6                        = 0xC0,  // +/- 5.6
       LSM303_MAGGAIN_8_1                        = 0xE0   // +/- 8.1
     } lsm303MagGain;
+/*=========================================================================*/
+
+/*=========================================================================
+    MAGNETOMETER OUTPUT DATA RATE SETTINGS
+    -----------------------------------------------------------------------*/
+    typedef enum
+    {
+      LSM303_MAG_ODR_0_75                      = 0x00, // 0.75 Hz
+      LSM303_MAG_ODR_1_5                       = 0x01, // 1.5 Hz
+      LSM303_MAG_ODR_3                         = 0x02, // 3 Hz
+      LSM303_MAG_ODR_7_5                       = 0x03, // 7.5 Hz
+      LSM303_MAG_ODR_15                        = 0x04, // 15 Hz
+      LSM303_MAG_ODR_30                        = 0x05, // 30 Hz
+      LSM303_MAG_ODR_75                        = 0x06, // 75 Hz
+      LSM303_MAG_ODR_220                       = 0x07, // 220 Hz
+    } lsm303MagODR;
 /*=========================================================================*/
 
 /*=========================================================================
@@ -139,6 +174,9 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     Adafruit_LSM303_Accel_Unified(int32_t sensorID = -1);
 
     bool begin(void);
+    void enableInt1DataReady(bool);
+    void setOutputDataRate(lsm303AccelODR);
+    void enableLowPower(bool);
     void getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
@@ -160,6 +198,7 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     bool begin(void);
     void enableAutoRange(bool enable);
     void setMagGain(lsm303MagGain gain);
+    void setOutputDataRate(lsm303MagODR);
     void getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
