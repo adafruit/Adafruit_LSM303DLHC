@@ -167,6 +167,34 @@ bool Adafruit_LSM303_Accel_Unified::begin()
 
 /**************************************************************************/
 /*!
+    @brief  Set the Accelerometer range
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Accel_Unified::setAccelRange(lsm303AccelRange range)
+{
+  switch(range)
+  {
+    case LSM303_ACCEL_RANGE_2:
+      _lsm303Accel_MG_LSB = 0.001F;
+      break;
+    case LSM303_ACCEL_RANGE_4:
+      _lsm303Accel_MG_LSB = 0.002F;
+      break;
+    case LSM303_ACCEL_RANGE_8:
+      _lsm303Accel_MG_LSB = 0.004F;
+      break;
+    case LSM303_ACCEL_RANGE_16:
+      _lsm303Accel_MG_LSB = 0.012F;
+      break;
+  }
+
+  byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG4_A);
+
+  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG4_A, existing |= range<<4);
+}
+
+/**************************************************************************/
+/*!
     @brief  Enables DRDY on INT1
 */
 /**************************************************************************/

@@ -89,6 +89,18 @@
 /*=========================================================================*/
 
 /*=========================================================================
+    ACCELEROMETER RANGE SETTINGS
+    -----------------------------------------------------------------------*/
+    typedef enum
+    {
+      LSM303_ACCEL_RANGE_2                      = 0x00, // +/- 2G
+      LSM303_ACCEL_RANGE_4                      = 0x01, // +/- 4G
+      LSM303_ACCEL_RANGE_8                      = 0x02, // +/- 8G
+      LSM303_ACCEL_RANGE_16                     = 0x03  // +/- 16G
+    } lsm303AccelRange;
+/*=========================================================================*/
+
+/*=========================================================================
     ACCELEROMETER OUTPUT DATA RATE SETTINGS
     -----------------------------------------------------------------------*/
     typedef enum
@@ -174,6 +186,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     Adafruit_LSM303_Accel_Unified(int32_t sensorID = -1);
 
     bool begin(void);
+    void setAccelRange(lsm303AccelRange);
     void enableInt1DataReady(bool);
     void setOutputDataRate(lsm303AccelODR);
     void enableLowPower(bool);
