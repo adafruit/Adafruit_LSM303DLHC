@@ -148,6 +148,9 @@ bool Adafruit_LSM303_Accel_Unified::begin()
   // Enable I2C
   Wire.begin();
 
+  // Default to normal mode
+  enableLowPower(false);
+
   // Enable the accelerometer (100Hz)
   write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x57);
 
@@ -198,13 +201,17 @@ void Adafruit_LSM303_Accel_Unified::setOutputDataRate(lsm303AccelODR odr)
 /**************************************************************************/
 void Adafruit_LSM303_Accel_Unified::enableLowPower(bool enabled)
 {
-  byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A);
+  byte existing1 = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A);
+  byte existing4 = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG4_A);
 
-  // Set/unset LPen
   if (enabled) {
-    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing |= 1<<3);
+    // Set CTRL_REG1_A/LPen and unset CTRL_REG4_A/HR
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing1 |= 1<<3);
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG4_A, existing4 &= ~(1<<3));
   } else {
-    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing &= ~(1<<3));
+    // Unset CTRL_REG1_A/LPen and set CTRL_REG4_A/HR
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing1 &= ~(1<<3));
+    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG4_A, existing4 |= 1<<3);
   }
 }
 
