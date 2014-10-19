@@ -187,7 +187,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
 
     bool begin(void);
     void setAccelRange(lsm303AccelRange);
-    void enableInt1DataReady(bool);
+    bool dataReady();
     void setOutputDataRate(lsm303AccelODR);
     void enableLowPower(bool);
     void getEvent(sensors_event_t*);

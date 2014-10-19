@@ -195,19 +195,11 @@ void Adafruit_LSM303_Accel_Unified::setAccelRange(lsm303AccelRange range)
 
 /**************************************************************************/
 /*!
-    @brief  Enables DRDY on INT1
+    @brief  Checks if there's data ready
 */
 /**************************************************************************/
-void Adafruit_LSM303_Accel_Unified::enableInt1DataReady(bool enabled)
-{
-  byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG3_A);
-
-  // Set/unset I1_DRDY1
-  if (enabled) {
-    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG3_A, existing |= 1<<4);
-  } else {
-    write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG3_A, existing &= ~(1<<4));
-  }
+bool Adafruit_LSM303_Accel_Unified::dataReady() {
+  return (read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_STATUS_REG_A) & 1<<3) ? true : false;
 }
 
 /**************************************************************************/
