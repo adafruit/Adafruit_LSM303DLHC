@@ -219,6 +219,8 @@ void Adafruit_LSM303_Accel_Unified::setOutputDataRate(lsm303AccelODR odr)
 {
   byte existing = read8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A);
 
+  // unset the ODR then set it
+  write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing &= ~(0x0f<<4));
   write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, existing |= odr<<4);
 }
 
@@ -493,6 +495,8 @@ void Adafruit_LSM303_Mag_Unified::setOutputDataRate(lsm303MagODR odr)
 {
   byte existing = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M);
 
+  // unset the ODR then set it
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, existing &= ~(0x07<<2));
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, existing |= odr<<2);
 }
 
