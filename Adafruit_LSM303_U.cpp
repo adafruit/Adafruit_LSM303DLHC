@@ -424,9 +424,6 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
     }
     else
     {
-      Serial.print(_magData.x); Serial.print(" ");
-      Serial.print(_magData.y); Serial.print(" ");
-      Serial.print(_magData.z); Serial.println(" ");
       /* Check if the sensor is saturating or not */
       if ( (_magData.x >= 2040) | (_magData.x <= -2040) | 
            (_magData.y >= 2040) | (_magData.y <= -2040) | 
