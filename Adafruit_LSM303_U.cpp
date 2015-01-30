@@ -340,6 +340,10 @@ bool Adafruit_LSM303_Mag_Unified::begin()
   {
     return false;
   }
+
+  // maximum frequency
+  reg1_a = 0x1c;
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, reg1_a);
   
   // Set the gain to a known level
   setMagGain(LSM303_MAGGAIN_1_3);
@@ -414,6 +418,13 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   
   while(!readingValid)
   {
+
+      uint8_t reg_mg = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_SR_REG_Mg);
+      if (!(reg_mg & 0x1))
+      {
+        continue;
+      }
+  
     /* Read new data */
     read();
     
