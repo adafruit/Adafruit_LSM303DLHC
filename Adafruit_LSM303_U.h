@@ -139,7 +139,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     Adafruit_LSM303_Accel_Unified(int32_t sensorID = -1);
   
     bool begin(void);
-    void getEvent(sensors_event_t*);
+    bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
   private:
@@ -160,7 +160,7 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     bool begin(void);
     void enableAutoRange(bool enable);
     void setMagGain(lsm303MagGain gain);
-    void getEvent(sensors_event_t*);
+    bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
   private:
