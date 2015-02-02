@@ -104,6 +104,22 @@
 /*=========================================================================*/
 
 /*=========================================================================
+    MAGNETOMETER UPDATE RATE SETTINGS
+    -----------------------------------------------------------------------*/
+    typedef enum
+    {
+      LSM303_MAGRATE_0_7                        = 0x00,  // 0.75 Hz
+      LSM303_MAGGAIN_1_5                        = 0x01,  // 1.5 Hz
+      LSM303_MAGGAIN_3_0                        = 0x62,  // 3.0 Hz
+      LSM303_MAGGAIN_7_5                        = 0x03,  // 7.5 Hz
+      LSM303_MAGGAIN_15                         = 0x04,  // 15 Hz
+      LSM303_MAGGAIN_30                         = 0x05,  // 30 Hz
+      LSM303_MAGGAIN_75                         = 0x06,  // 75 Hz
+      LSM303_MAGGAIN_220                        = 0x07   // 200 Hz
+    } lsm303MagRate;	
+/*=========================================================================*/
+
+/*=========================================================================
     INTERNAL MAGNETOMETER DATA TYPE
     -----------------------------------------------------------------------*/
     typedef struct lsm303MagData_s
@@ -160,6 +176,7 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     bool begin(void);
     void enableAutoRange(bool enable);
     void setMagGain(lsm303MagGain gain);
+    void setMagRate(lsm303MagRate rate);
     bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 

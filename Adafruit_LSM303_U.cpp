@@ -343,10 +343,6 @@ bool Adafruit_LSM303_Mag_Unified::begin()
     return false;
   }
 
-  // maximum frequency
-  reg1_a = 0x1c;
-  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, reg1_a);
-  
   // Set the gain to a known level
   setMagGain(LSM303_MAGGAIN_1_3);
 
@@ -406,6 +402,18 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
       break;
   } 
 }
+
+/**************************************************************************/
+/*!
+    @brief  Sets the magnetometer's update rate
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Mag_Unified::setMagRate(lsm303MagRate rate)
+{
+	byte reg_m = ((byte)rate & 0x07) << 2;
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, reg_m);
+}
+
 
 /**************************************************************************/
 /*! 
