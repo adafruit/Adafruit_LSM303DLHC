@@ -23,6 +23,10 @@
 
 #include "Adafruit_LSM303_U.h"
 
+/* enabling this #define will enable the debug print blocks
+#define LSM303_DEBUG
+*/
+
 static float _lsm303Accel_MG_LSB     = 0.001F;   // 1, 2, 4 or 12 mg per lsb
 static float _lsm303Mag_Gauss_LSB_XY = 1100.0F;  // Varies with gain
 static float _lsm303Mag_Gauss_LSB_Z  = 980.0F;   // Varies with gain
@@ -424,9 +428,11 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
     }
     else
     {
+#ifdef LSM303_DEBUG
       Serial.print(_magData.x); Serial.print(" ");
       Serial.print(_magData.y); Serial.print(" ");
       Serial.print(_magData.z); Serial.println(" ");
+#endif	  
       /* Check if the sensor is saturating or not */
       if ( (_magData.x >= 2040) | (_magData.x <= -2040) | 
            (_magData.y >= 2040) | (_magData.y <= -2040) | 
@@ -438,32 +444,44 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
           case LSM303_MAGGAIN_5_6:
             setMagGain(LSM303_MAGGAIN_8_1);
             readingValid = false;
+#ifdef LSM303_DEBUG
             Serial.println("Changing range to +/- 8.1");
+#endif
             break;
           case LSM303_MAGGAIN_4_7:
             setMagGain(LSM303_MAGGAIN_5_6);
             readingValid = false;
+#ifdef LSM303_DEBUG
             Serial.println("Changing range to +/- 5.6");
+#endif
             break;
           case LSM303_MAGGAIN_4_0:
             setMagGain(LSM303_MAGGAIN_4_7);
             readingValid = false;
+#ifdef LSM303_DEBUG
             Serial.println("Changing range to +/- 4.7");
+#endif			
             break;
           case LSM303_MAGGAIN_2_5:
             setMagGain(LSM303_MAGGAIN_4_0);
             readingValid = false;
+#ifdef LSM303_DEBUG
             Serial.println("Changing range to +/- 4.0");
+#endif			
             break;
           case LSM303_MAGGAIN_1_9:
             setMagGain(LSM303_MAGGAIN_2_5);
             readingValid = false;
+#ifdef LSM303_DEBUG
             Serial.println("Changing range to +/- 2.5");
+#endif			
             break;
           case LSM303_MAGGAIN_1_3:
             setMagGain(LSM303_MAGGAIN_1_9);
             readingValid = false;
+#ifdef LSM303_DEBUG
             Serial.println("Changing range to +/- 1.9");
+#endif			
             break;
           default:
             readingValid = true;
