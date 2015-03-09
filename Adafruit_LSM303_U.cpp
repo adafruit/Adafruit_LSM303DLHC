@@ -171,7 +171,7 @@ bool Adafruit_LSM303_Accel_Unified::begin()
     @brief  Gets the most recent sensor event
 */
 /**************************************************************************/
-void Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
+bool Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
   /* Clear the event */
   memset(event, 0, sizeof(sensors_event_t));
   
@@ -185,6 +185,8 @@ void Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
   event->acceleration.x = _accelData.x * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
   event->acceleration.y = _accelData.y * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
   event->acceleration.z = _accelData.z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+
+	return true;
 }
 
 /**************************************************************************/
@@ -344,7 +346,7 @@ bool Adafruit_LSM303_Mag_Unified::begin()
   {
     return false;
   }
-  
+
   // Set the gain to a known level
   setMagGain(LSM303_MAGGAIN_1_3);
 
@@ -406,11 +408,23 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
 }
 
 /**************************************************************************/
+/*!
+    @brief  Sets the magnetometer's update rate
+*/
+/**************************************************************************/
+void Adafruit_LSM303_Mag_Unified::setMagRate(lsm303MagRate rate)
+{
+	byte reg_m = ((byte)rate & 0x07) << 2;
+  write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, reg_m);
+}
+
+
+/**************************************************************************/
 /*! 
     @brief  Gets the most recent sensor event
 */
 /**************************************************************************/
-void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
+bool Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   bool readingValid = false;
   
   /* Clear the event */
@@ -418,6 +432,12 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   
   while(!readingValid)
   {
+
+    uint8_t reg_mg = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_SR_REG_Mg);
+    if (!(reg_mg & 0x1)) {
+			return false;
+    }
+  
     /* Read new data */
     read();
     
@@ -503,6 +523,8 @@ void Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   event->magnetic.x = _magData.x / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
   event->magnetic.y = _magData.y / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
   event->magnetic.z = _magData.z / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+		
+	return true;
 }
 
 /**************************************************************************/
