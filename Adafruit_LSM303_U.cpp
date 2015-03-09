@@ -186,7 +186,7 @@ bool Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
   event->acceleration.y = _accelData.y * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
   event->acceleration.z = _accelData.z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
-	return true;
+  return true;
 }
 
 /**************************************************************************/
@@ -305,7 +305,7 @@ void Adafruit_LSM303_Mag_Unified::read()
   _magData.z = (int16_t)(zlo | ((int16_t)zhi << 8));
   
   // ToDo: Calculate orientation
-  _magData.orientation = 0.0;
+  // _magData.orientation = 0.0;
 }
 
 /***************************************************************************
