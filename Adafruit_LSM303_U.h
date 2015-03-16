@@ -135,22 +135,6 @@
 /*=========================================================================*/
 
 /*=========================================================================
-    MAGNETOMETER OUTPUT DATA RATE SETTINGS
-    -----------------------------------------------------------------------*/
-    typedef enum
-    {
-      LSM303_MAG_ODR_0_75                      = 0x00, // 0.75 Hz
-      LSM303_MAG_ODR_1_5                       = 0x01, // 1.5 Hz
-      LSM303_MAG_ODR_3                         = 0x02, // 3 Hz
-      LSM303_MAG_ODR_7_5                       = 0x03, // 7.5 Hz
-      LSM303_MAG_ODR_15                        = 0x04, // 15 Hz
-      LSM303_MAG_ODR_30                        = 0x05, // 30 Hz
-      LSM303_MAG_ODR_75                        = 0x06, // 75 Hz
-      LSM303_MAG_ODR_220                       = 0x07, // 220 Hz
-    } lsm303MagODR;
-/*=========================================================================*/
-
-/*=========================================================================
     MAGNETOMETER UPDATE RATE SETTINGS
     -----------------------------------------------------------------------*/
     typedef enum
@@ -205,7 +189,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     bool dataReady();
     void setOutputDataRate(lsm303AccelODR);
     void enableLowPower(bool);
-    void getEvent(sensors_event_t*);
+    bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
   private:
