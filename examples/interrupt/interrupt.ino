@@ -4,7 +4,7 @@
  * Breakout: https://www.adafruit.com/products/1120
  * 10DOF: https://www.adafruit.com/product/1604
  *
- * Connect DRDY (or LRDY on the 10DOF) to interrupt 0
+ * Connect DRDY/LRDY to interrupt 0, I1/LIN1 to interrupt 1
  */
 
 #include <Wire.h>
@@ -21,39 +21,43 @@
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
 Adafruit_LSM303_Mag_Unified   mag   = Adafruit_LSM303_Mag_Unified(30302);
 
-unsigned int loop_count;
-unsigned int accel_count;
-unsigned int mag_count;
-
+unsigned int loop_count, accel_count, mag_count;
 unsigned long serial_output_timer;
-
 float ax, ay, az, mx, my, mz;
 
 volatile boolean magDataReady = false;
+volatile boolean accelDataReady = false;
 
 
 void setup() {
   Serial.begin(115200);
 
-  attachInterrupt(0, magDataReadyISR, RISING);      // DRDY, Mag Data Ready
+  attachInterrupt(0, magDataReadyISR, RISING);      // DRDY/LRDY, Mag Data Ready
+  attachInterrupt(1, accelDataReadyISR, RISING);    // I1/LIN1, Accel Data Ready
 
   if (!accel.begin()) {
     Serial.println(F("Ooops, no LSM303 detected (accel)... Check your wiring!"));
     while(1);
   }
-  accel.setOutputDataRate(LSM303_ACCEL_ODR_200);  // Set a 200mhz data rate
+  //accel.setAccelRate(LSM303_ACCEL_ODR_100);       // Default is 100 Hz
+  accel.enableInt1DataReady(true);
 
   if (!mag.begin()) {
-    Serial.println("Ooops, no LSM303 detected (mag)... Check your wiring!");
+    Serial.println(F("Ooops, no LSM303 detected (mag)... Check your wiring!"));
     while(1);
   }
-  mag.setOutputDataRate(LSM303_MAG_ODR_30);      // Set a 30mhz data rate
+  //mag.setMagRate(LSM303_MAGRATE_15);              // Default is 15 Hz
   // mag interrupt is on by default
 }
 
 
 void magDataReadyISR () {
   magDataReady = true;
+}
+
+
+void accelDataReadyISR () {
+  accelDataReady = true;
 }
 
 
@@ -71,8 +75,9 @@ void loop() {
 
   loop_count++;
 
-  if (accel.dataReady()) {
+  if (accelDataReady) {
     accel_count++;
+    accelDataReady = false;
 
     sensors_event_t event;
 

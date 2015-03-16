@@ -116,7 +116,7 @@
       LSM303_ACCEL_ODR_1344                     = 0x09, // Normal (1.344 kHz) / low-power mode (5.376 KHz)
       LSM303_ACCEL_ODR_1620                     = 0x08, // Low-power mode (1.620 KHz)
       LSM303_ACCEL_ODR_5376                     = 0x09, // Normal (1.344 kHz) / low-power mode (5.376 KHz)
-    } lsm303AccelODR;
+    } lsm303AccelRate;
 /*=========================================================================*/
 
 /*=========================================================================
@@ -186,8 +186,8 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
 
     bool begin(void);
     void setAccelRange(lsm303AccelRange);
-    bool dataReady();
-    void setOutputDataRate(lsm303AccelODR);
+    void enableInt1DataReady(bool);
+    void setAccelRate(lsm303AccelRate);
     void enableLowPower(bool);
     bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
