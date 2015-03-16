@@ -15,7 +15,7 @@
 #define DEBUG
 
 // Set the output rate.  This is independent of the sensor sampling.
-#define SERIAL_OUTPUT_HZ 10
+#define SERIAL_OUTPUT_HZ 20
 
 
 Adafruit_LSM303_Accel_Unified accel = Adafruit_LSM303_Accel_Unified(30301);
@@ -30,7 +30,8 @@ volatile boolean accelDataReady = false;
 
 
 void setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
+  Serial.println(F("\nLSM303 Interrupt Test"));
 
   attachInterrupt(0, magDataReadyISR, RISING);      // DRDY/LRDY, Mag Data Ready
   attachInterrupt(1, accelDataReadyISR, RISING);    // I1/LIN1, Accel Data Ready
