@@ -163,6 +163,9 @@ bool Adafruit_LSM303_Accel_Unified::begin()
     return false;
   }
 
+  // Disable the Data Ready interrupt so that it doesn't go high before it's attached
+  enableInt1DataReady(false);
+
   // Default to normal mode
   enableLowPower(false);
 
