@@ -126,9 +126,9 @@ void Adafruit_LSM303_Accel_Unified::read()
   #endif    
 
   // Shift values to create properly formed integer (low byte first)
-  _accelData.x = (int16_t)(xlo | ((int16_t)xhi << 8));
-  _accelData.y = (int16_t)(ylo | ((int16_t)yhi << 8));
-  _accelData.z = (int16_t)(zlo | ((int16_t)zhi << 8));
+  _accelData.x = (int16_t)(xlo | (xhi << 8)) >> 4;
+  _accelData.y = (int16_t)(ylo | (yhi << 8)) >> 4;
+  _accelData.z = (int16_t)(zlo | (zhi << 8)) >> 4;
 }
 
 /***************************************************************************
@@ -306,10 +306,10 @@ void Adafruit_LSM303_Mag_Unified::read()
   #endif
   
   // Shift values to create properly formed integer (low byte first)
-  _magData.x = (int16_t)(xlo | (xhi << 8)) >> 4;
-  _magData.y = (int16_t)(ylo | (yhi << 8)) >> 4;
-  _magData.z = (int16_t)(zlo | (zhi << 8)) >> 4;
-
+  _magData.x = (int16_t)(xlo | ((int16_t)xhi << 8));
+  _magData.y = (int16_t)(ylo | ((int16_t)yhi << 8));
+  _magData.z = (int16_t)(zlo | ((int16_t)zhi << 8));
+  
   // ToDo: Calculate orientation
   // _magData.orientation = 0.0;
 }
