@@ -23,6 +23,9 @@ void displaySensorDetails(void)
 
 void setup(void) 
 {
+#ifndef ESP8266
+  while (!Serial);     // will pause Zero, Leonardo, etc until serial console opens
+#endif
   Serial.begin(9600);
   Serial.println("Accelerometer Test"); Serial.println("");
   
@@ -50,3 +53,4 @@ void loop(void)
   Serial.print("Z: "); Serial.print(event.acceleration.z); Serial.print("  ");Serial.println("m/s^2 ");
   delay(500);
 }
+
