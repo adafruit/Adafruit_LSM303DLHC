@@ -46,15 +46,15 @@ static float _lsm303Mag_Gauss_LSB_Z  = 980.0F;   // Varies with gain
 /**************************************************************************/
 void Adafruit_LSM303_Accel_Unified::write8(byte address, byte reg, byte value)
 {
-  Wire.beginTransmission(address);
+  _wire->beginTransmission(address);
   #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
-    Wire.write((uint8_t)value);
+    _wire->write((uint8_t)reg);
+    _wire->write((uint8_t)value);
   #else
-    Wire.send(reg);
-    Wire.send(value);
+    _wire->send(reg);
+    _wire->send(value);
   #endif
-  Wire.endTransmission();
+  _wire->endTransmission();
 }
 
 /**************************************************************************/
@@ -66,20 +66,20 @@ byte Adafruit_LSM303_Accel_Unified::read8(byte address, byte reg)
 {
   byte value;
 
-  Wire.beginTransmission(address);
+  _wire->beginTransmission(address);
   #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
+    _wire->write((uint8_t)reg);
   #else
-    Wire.send(reg);
+    _wire->send(reg);
   #endif
-  Wire.endTransmission();
-  Wire.requestFrom(address, (byte)1);
+  _wire->endTransmission();
+  _wire->requestFrom(address, (byte)1);
   #if ARDUINO >= 100
-    value = Wire.read();
+    value = _wire->read();
   #else
-    value = Wire.receive();
+    value = _wire->receive();
   #endif
-  Wire.endTransmission();
+  _wire->endTransmission();
 
   return value;
 }
@@ -92,32 +92,32 @@ byte Adafruit_LSM303_Accel_Unified::read8(byte address, byte reg)
 void Adafruit_LSM303_Accel_Unified::read()
 {
   // Read the accelerometer
-  Wire.beginTransmission((byte)LSM303_ADDRESS_ACCEL);
+  _wire->beginTransmission((byte)LSM303_ADDRESS_ACCEL);
   #if ARDUINO >= 100
-    Wire.write(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80);
+    _wire->write(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80);
   #else
-    Wire.send(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80);
+    _wire->send(LSM303_REGISTER_ACCEL_OUT_X_L_A | 0x80);
   #endif
-  Wire.endTransmission();
-  Wire.requestFrom((byte)LSM303_ADDRESS_ACCEL, (byte)6);
+  _wire->endTransmission();
+  _wire->requestFrom((byte)LSM303_ADDRESS_ACCEL, (byte)6);
 
   // Wait around until enough data is available
-  while (Wire.available() < 6);
+  while (_wire->available() < 6);
 
   #if ARDUINO >= 100
-    uint8_t xlo = Wire.read();
-    uint8_t xhi = Wire.read();
-    uint8_t ylo = Wire.read();
-    uint8_t yhi = Wire.read();
-    uint8_t zlo = Wire.read();
-    uint8_t zhi = Wire.read();
+    uint8_t xlo = _wire->read();
+    uint8_t xhi = _wire->read();
+    uint8_t ylo = _wire->read();
+    uint8_t yhi = _wire->read();
+    uint8_t zlo = _wire->read();
+    uint8_t zhi = _wire->read();
   #else
-    uint8_t xlo = Wire.receive();
-    uint8_t xhi = Wire.receive();
-    uint8_t ylo = Wire.receive();
-    uint8_t yhi = Wire.receive();
-    uint8_t zlo = Wire.receive();
-    uint8_t zhi = Wire.receive();
+    uint8_t xlo = _wire->receive();
+    uint8_t xhi = _wire->receive();
+    uint8_t ylo = _wire->receive();
+    uint8_t yhi = _wire->receive();
+    uint8_t zlo = _wire->receive();
+    uint8_t zhi = _wire->receive();
   #endif
 
   // Shift values to create properly formed integer (low byte first)
@@ -132,16 +132,25 @@ void Adafruit_LSM303_Accel_Unified::read()
 
 /**************************************************************************/
 /*!
-    @brief  Instantiates a new Adafruit_LSM303 class
+    @brief  Instantiates a new Adafruit_LSM303 class with the specified I2C wire
 */
 /**************************************************************************/
-Adafruit_LSM303_Accel_Unified::Adafruit_LSM303_Accel_Unified(int32_t sensorID) {
+Adafruit_LSM303_Accel_Unified::Adafruit_LSM303_Accel_Unified(TwoWire* wire, int32_t sensorID) {
+  _wire = wire;
   _sensorID = sensorID;
 
   // Clear the raw accel data
   raw.x = 0;
   raw.y = 0;
   raw.z = 0;
+}
+
+/**************************************************************************/
+/*!
+@brief  Instantiates a new Adafruit_LSM303 class using the default I2C wire
+*/
+/**************************************************************************/
+Adafruit_LSM303_Accel_Unified::Adafruit_LSM303_Accel_Unified(int32_t sensorID) : Adafruit_LSM303_Accel_Unified(&Wire, sensorID){
 }
 
 /***************************************************************************
@@ -156,7 +165,7 @@ Adafruit_LSM303_Accel_Unified::Adafruit_LSM303_Accel_Unified(int32_t sensorID) {
 bool Adafruit_LSM303_Accel_Unified::begin()
 {
   // Enable I2C
-  Wire.begin();
+  _wire->begin();
 
   // Enable the accelerometer (100Hz)
   write8(LSM303_ADDRESS_ACCEL, LSM303_REGISTER_ACCEL_CTRL_REG1_A, 0x57);
@@ -230,15 +239,15 @@ void Adafruit_LSM303_Accel_Unified::getSensor(sensor_t *sensor) {
 /**************************************************************************/
 void Adafruit_LSM303_Mag_Unified::write8(byte address, byte reg, byte value)
 {
-  Wire.beginTransmission(address);
+  _wire->beginTransmission(address);
   #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
-    Wire.write((uint8_t)value);
+    _wire->write((uint8_t)reg);
+    _wire->write((uint8_t)value);
   #else
-    Wire.send(reg);
-    Wire.send(value);
+    _wire->send(reg);
+    _wire->send(value);
   #endif
-  Wire.endTransmission();
+  _wire->endTransmission();
 }
 
 /**************************************************************************/
@@ -250,20 +259,20 @@ byte Adafruit_LSM303_Mag_Unified::read8(byte address, byte reg)
 {
   byte value;
 
-  Wire.beginTransmission(address);
+  _wire->beginTransmission(address);
   #if ARDUINO >= 100
-    Wire.write((uint8_t)reg);
+    _wire->write((uint8_t)reg);
   #else
-    Wire.send(reg);
+    _wire->send(reg);
   #endif
-  Wire.endTransmission();
-  Wire.requestFrom(address, (byte)1);
+  _wire->endTransmission();
+  _wire->requestFrom(address, (byte)1);
   #if ARDUINO >= 100
-    value = Wire.read();
+    value = _wire->read();
   #else
-    value = Wire.receive();
+    value = _wire->receive();
   #endif
-  Wire.endTransmission();
+  _wire->endTransmission();
 
   return value;
 }
@@ -276,33 +285,33 @@ byte Adafruit_LSM303_Mag_Unified::read8(byte address, byte reg)
 void Adafruit_LSM303_Mag_Unified::read()
 {
   // Read the magnetometer
-  Wire.beginTransmission((byte)LSM303_ADDRESS_MAG);
+  _wire->beginTransmission((byte)LSM303_ADDRESS_MAG);
   #if ARDUINO >= 100
-    Wire.write(LSM303_REGISTER_MAG_OUT_X_H_M);
+    _wire->write(LSM303_REGISTER_MAG_OUT_X_H_M);
   #else
-    Wire.send(LSM303_REGISTER_MAG_OUT_X_H_M);
+    _wire->send(LSM303_REGISTER_MAG_OUT_X_H_M);
   #endif
-  Wire.endTransmission();
-  Wire.requestFrom((byte)LSM303_ADDRESS_MAG, (byte)6);
+  _wire->endTransmission();
+  _wire->requestFrom((byte)LSM303_ADDRESS_MAG, (byte)6);
 
   // Wait around until enough data is available
-  while (Wire.available() < 6);
+  while (_wire->available() < 6);
 
   // Note high before low (different than accel)
   #if ARDUINO >= 100
-    uint8_t xhi = Wire.read();
-    uint8_t xlo = Wire.read();
-    uint8_t zhi = Wire.read();
-    uint8_t zlo = Wire.read();
-    uint8_t yhi = Wire.read();
-    uint8_t ylo = Wire.read();
+    uint8_t xhi = _wire->read();
+    uint8_t xlo = _wire->read();
+    uint8_t zhi = _wire->read();
+    uint8_t zlo = _wire->read();
+    uint8_t yhi = _wire->read();
+    uint8_t ylo = _wire->read();
   #else
-    uint8_t xhi = Wire.receive();
-    uint8_t xlo = Wire.receive();
-    uint8_t zhi = Wire.receive();
-    uint8_t zlo = Wire.receive();
-    uint8_t yhi = Wire.receive();
-    uint8_t ylo = Wire.receive();
+    uint8_t xhi = _wire->receive();
+    uint8_t xlo = _wire->receive();
+    uint8_t zhi = _wire->receive();
+    uint8_t zlo = _wire->receive();
+    uint8_t yhi = _wire->receive();
+    uint8_t ylo = _wire->receive();
   #endif
 
   // Shift values to create properly formed integer (low byte first)
@@ -320,7 +329,8 @@ void Adafruit_LSM303_Mag_Unified::read()
     @brief  Instantiates a new Adafruit_LSM303 class
 */
 /**************************************************************************/
-Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) {
+Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(TwoWire* wire, int32_t sensorID) {
+  _wire = wire;
   _sensorID = sensorID;
   autoRangeEnabled = false;
 
@@ -328,6 +338,14 @@ Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) {
   raw.x = 0;
   raw.y = 0;
   raw.z = 0;
+}
+
+/**************************************************************************/
+/*!
+@brief  Instantiates a new Adafruit_LSM303 class
+*/
+/**************************************************************************/
+Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) : Adafruit_LSM303_Mag_Unified(&Wire, sensorID){
 }
 
 /***************************************************************************
@@ -342,7 +360,7 @@ Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) {
 bool Adafruit_LSM303_Mag_Unified::begin()
 {
   // Enable I2C
-  Wire.begin();
+  _wire->begin();
 
   // Enable the magnetometer
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_MR_REG_M, 0x00);

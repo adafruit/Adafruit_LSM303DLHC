@@ -152,6 +152,7 @@
 class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
 {
   public:
+    Adafruit_LSM303_Accel_Unified(TwoWire* wire, int32_t sensorID = -1);
     Adafruit_LSM303_Accel_Unified(int32_t sensorID = -1);
 
     bool begin(void);
@@ -161,6 +162,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     lsm303AccelData raw;   // Last read accelerometer data will be available here
 
   private:
+    TwoWire*        _wire;
     int32_t         _sensorID;
 
     void write8(byte address, byte reg, byte value);
@@ -172,6 +174,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
 class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
 {
   public:
+    Adafruit_LSM303_Mag_Unified(TwoWire* wire, int32_t sensorID = -1);
     Adafruit_LSM303_Mag_Unified(int32_t sensorID = -1);
 
     bool begin(void);
@@ -186,6 +189,7 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     bool            autoRangeEnabled;
 
   private:
+    TwoWire*        _wire;
     int32_t         _sensorID;
 
     void write8(byte address, byte reg, byte value);
