@@ -121,9 +121,9 @@ void Adafruit_LSM303_Accel_Unified::read()
   #endif
 
   // Shift values to create properly formed integer (low byte first)
-  accelData.x = (int16_t)(xlo | (xhi << 8)) >> 4;
-  accelData.y = (int16_t)(ylo | (yhi << 8)) >> 4;
-  accelData.z = (int16_t)(zlo | (zhi << 8)) >> 4;
+  raw.x = (int16_t)(xlo | (xhi << 8)) >> 4;
+  raw.y = (int16_t)(ylo | (yhi << 8)) >> 4;
+  raw.z = (int16_t)(zlo | (zhi << 8)) >> 4;
 }
 
 /***************************************************************************
@@ -139,9 +139,9 @@ Adafruit_LSM303_Accel_Unified::Adafruit_LSM303_Accel_Unified(int32_t sensorID) {
   _sensorID = sensorID;
 
   // Clear the raw accel data
-  accelData.x = 0;
-  accelData.y = 0;
-  accelData.z = 0;
+  raw.x = 0;
+  raw.y = 0;
+  raw.z = 0;
 }
 
 /***************************************************************************
@@ -188,9 +188,9 @@ bool Adafruit_LSM303_Accel_Unified::getEvent(sensors_event_t *event) {
   event->sensor_id = _sensorID;
   event->type      = SENSOR_TYPE_ACCELEROMETER;
   event->timestamp = millis();
-  event->acceleration.x = accelData.x * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-  event->acceleration.y = accelData.y * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
-  event->acceleration.z = accelData.z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+  event->acceleration.x = (float)raw.x * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+  event->acceleration.y = (float)raw.y * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
+  event->acceleration.z = (float)raw.z * _lsm303Accel_MG_LSB * SENSORS_GRAVITY_STANDARD;
 
   return true;
 }
@@ -306,9 +306,9 @@ void Adafruit_LSM303_Mag_Unified::read()
   #endif
 
   // Shift values to create properly formed integer (low byte first)
-  magData.x = (int16_t)(xlo | ((int16_t)xhi << 8));
-  magData.y = (int16_t)(ylo | ((int16_t)yhi << 8));
-  magData.z = (int16_t)(zlo | ((int16_t)zhi << 8));
+  raw.x = (int16_t)(xlo | ((int16_t)xhi << 8));
+  raw.y = (int16_t)(ylo | ((int16_t)yhi << 8));
+  raw.z = (int16_t)(zlo | ((int16_t)zhi << 8));
 }
 
 /***************************************************************************
@@ -324,10 +324,10 @@ Adafruit_LSM303_Mag_Unified::Adafruit_LSM303_Mag_Unified(int32_t sensorID) {
   _sensorID = sensorID;
   autoRangeEnabled = false;
 
-  // Clear the raw accel data
-  magData.x = 0;
-  magData.y = 0;
-  magData.z = 0;
+  // Clear the raw mag data
+  raw.x = 0;
+  raw.y = 0;
+  raw.z = 0;
 }
 
 /***************************************************************************
@@ -457,14 +457,14 @@ bool Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
     else
     {
 #ifdef LSM303_DEBUG
-      Serial.print(magData.x); Serial.print(" ");
-      Serial.print(magData.y); Serial.print(" ");
-      Serial.print(magData.z); Serial.println(" ");
+      Serial.print(raw.x); Serial.print(" ");
+      Serial.print(raw.y); Serial.print(" ");
+      Serial.print(raw.z); Serial.println(" ");
 #endif
       /* Check if the sensor is saturating or not */
-      if ( (magData.x >= 2040) | (magData.x <= -2040) |
-           (magData.y >= 2040) | (magData.y <= -2040) |
-           (magData.z >= 2040) | (magData.z <= -2040) )
+      if ( (raw.x >= 2040) | (raw.x <= -2040) |
+           (raw.y >= 2040) | (raw.y <= -2040) |
+           (raw.z >= 2040) | (raw.z <= -2040) )
       {
         /* Saturating .... increase the range if we can */
         switch(magGain)
@@ -528,9 +528,9 @@ bool Adafruit_LSM303_Mag_Unified::getEvent(sensors_event_t *event) {
   event->sensor_id = _sensorID;
   event->type      = SENSOR_TYPE_MAGNETIC_FIELD;
   event->timestamp = millis();
-  event->magnetic.x = magData.x / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-  event->magnetic.y = magData.y / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
-  event->magnetic.z = magData.z / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
+  event->magnetic.x = (float)raw.x / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+  event->magnetic.y = (float)raw.y / _lsm303Mag_Gauss_LSB_XY * SENSORS_GAUSS_TO_MICROTESLA;
+  event->magnetic.z = (float)raw.z / _lsm303Mag_Gauss_LSB_Z * SENSORS_GAUSS_TO_MICROTESLA;
 
 	return true;
 }

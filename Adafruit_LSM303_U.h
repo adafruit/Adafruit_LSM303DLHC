@@ -125,9 +125,9 @@
     -----------------------------------------------------------------------*/
     typedef struct lsm303MagData_s
     {
-        float x;
-        float y;
-        float z;
+        int16_t x;
+        int16_t y;
+        int16_t z;
     } lsm303MagData;
 /*=========================================================================*/
 
@@ -136,9 +136,9 @@
     -----------------------------------------------------------------------*/
     typedef struct lsm303AccelData_s
     {
-      float x;
-      float y;
-      float z;
+      int16_t x;
+      int16_t y;
+      int16_t z;
     } lsm303AccelData;
 /*=========================================================================*/
 
@@ -158,7 +158,7 @@ class Adafruit_LSM303_Accel_Unified : public Adafruit_Sensor
     bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
-    lsm303AccelData accelData;   // Last read accelerometer data will be available here
+    lsm303AccelData raw;   // Last read accelerometer data will be available here
 
   private:
     int32_t         _sensorID;
@@ -181,13 +181,13 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
 
-    lsm303MagData   magData;     // Last read magnetometer data will be available here
+    lsm303MagData   raw;     // Last read magnetometer data will be available here
     lsm303MagGain   magGain;
     bool            autoRangeEnabled;
 
   private:
     int32_t         _sensorID;
-    
+
     void write8(byte address, byte reg, byte value);
     byte read8(byte address, byte reg);
     void read(void);

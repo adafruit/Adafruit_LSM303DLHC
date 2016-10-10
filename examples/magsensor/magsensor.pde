@@ -58,9 +58,9 @@ void loop(void)
   /* Note: You can also get the raw (non unified values) for */
   /* the last data sample as follows. The .getEvent call populates */
   /* the raw values used below. */
-  // Serial.print("X Raw: "); Serial.print(mag.magData.x); Serial.print("  ");
-  // Serial.print("Y Raw: "); Serial.print(mag.magData.y); Serial.print("  ");
-  // Serial.print("Z Raw: "); Serial.print(mag.magData.z); Serial.println("");
+  // Serial.print("X Raw: "); Serial.print(mag.raw.x); Serial.print("  ");
+  // Serial.print("Y Raw: "); Serial.print(mag.raw.y); Serial.print("  ");
+  // Serial.print("Z Raw: "); Serial.print(mag.raw.z); Serial.println("");
 
   /* Delay before the next sample */
   delay(500);
