@@ -193,4 +193,19 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     void read(void);
 };
 
+/* Non Unified (old) driver for compatibility reasons */
+class Adafruit_LSM303
+{
+  public:
+    bool begin(void);
+    void read(void);
+    void setMagGain(lsm303MagGain gain);
+
+    lsm303AccelData accelData;    // Last read accelerometer data will be available here
+    lsm303MagData magData;        // Last read magnetometer data will be available here
+
+    void write8(byte address, byte reg, byte value);
+    byte read8(byte address, byte reg);
+};
+
 #endif
