@@ -111,7 +111,7 @@
     {
       LSM303_MAGRATE_0_7                        = 0x00,  // 0.75 Hz
       LSM303_MAGRATE_1_5                        = 0x01,  // 1.5 Hz
-      LSM303_MAGRATE_3_0                        = 0x62,  // 3.0 Hz
+      LSM303_MAGRATE_3_0                        = 0x02,  // 3.0 Hz
       LSM303_MAGRATE_7_5                        = 0x03,  // 7.5 Hz
       LSM303_MAGRATE_15                         = 0x04,  // 15 Hz
       LSM303_MAGRATE_30                         = 0x05,  // 30 Hz
