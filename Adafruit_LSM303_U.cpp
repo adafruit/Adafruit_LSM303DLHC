@@ -422,7 +422,7 @@ void Adafruit_LSM303_Mag_Unified::setMagGain(lsm303MagGain gain)
 /**************************************************************************/
 void Adafruit_LSM303_Mag_Unified::setMagRate(lsm303MagRate rate)
 {
-	byte reg_m = ((byte)rate & 0x07) << 2;
+	byte reg_m = ((byte)rate & 0x1C);
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M, reg_m);
 }
 

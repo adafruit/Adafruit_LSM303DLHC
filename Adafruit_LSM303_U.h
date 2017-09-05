@@ -109,14 +109,14 @@
     -----------------------------------------------------------------------*/
     typedef enum
     {
-      LSM303_MAGRATE_0_7                        = 0x00,  // 0.75 Hz
-      LSM303_MAGRATE_1_5                        = 0x01,  // 1.5 Hz
-      LSM303_MAGRATE_3_0                        = 0x02,  // 3.0 Hz
-      LSM303_MAGRATE_7_5                        = 0x03,  // 7.5 Hz
-      LSM303_MAGRATE_15                         = 0x04,  // 15 Hz
-      LSM303_MAGRATE_30                         = 0x05,  // 30 Hz
-      LSM303_MAGRATE_75                         = 0x06,  // 75 Hz
-      LSM303_MAGRATE_220                        = 0x07   // 200 Hz
+      LSM303_MAGRATE_0_7                        = ( 0x00 << 2 ),  // 0.75 Hz
+      LSM303_MAGRATE_1_5                        = ( 0x01 << 2 ),  // 1.5 Hz 
+      LSM303_MAGRATE_3_0                        = ( 0x02 << 2 ),  // 3.0 Hz 
+      LSM303_MAGRATE_7_5                        = ( 0x03 << 2 ),  // 7.5 Hz 
+      LSM303_MAGRATE_15                         = ( 0x04 << 2 ),  // 15 Hz 
+      LSM303_MAGRATE_30                         = ( 0x05 << 2 ),  // 30 Hz 
+      LSM303_MAGRATE_75                         = ( 0x06 << 2 ),  // 75 Hz 
+      LSM303_MAGRATE_220                        = ( 0x07 << 2 )   // 200 Hz 
     } lsm303MagRate;
 /*=========================================================================*/
 
