@@ -346,15 +346,12 @@ bool Adafruit_LSM303_Mag_Unified::begin()
 
   // Enable the magnetometer
   write8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_MR_REG_M, 0x00);
-
-  // LSM303DLHC has no WHOAMI register so read CRA_REG_M to check
-  // the default value (0b00010000/0x10)
-  uint8_t reg1_a = read8(LSM303_ADDRESS_MAG, LSM303_REGISTER_MAG_CRA_REG_M);
-  if (reg1_a != 0x10)
-  {
-    return false;
-  }
-
+  
+  // LSM303DLHC has no WHOAMI register, but it has IR_REG_M that should be constant
+  if( this->read8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_IRA_REG_M ) != 0b01001000 ) return false;
+  if( this->read8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_IRB_REG_M ) != 0b00110100 ) return false;
+  if( this->read8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_IRC_REG_M ) != 0b00110011 ) return false;
+  
   // Set the gain to a known level
   setMagGain(LSM303_MAGGAIN_1_3);
 
@@ -555,6 +552,29 @@ void Adafruit_LSM303_Mag_Unified::getSensor(sensor_t *sensor) {
   sensor->min_value   = 0.0F; // TBD
   sensor->resolution  = 0.0F; // TBD
 }
+
+
+//***************************************************************************
+// enables the temperature sensor
+//***************************************************************************
+void Adafruit_LSM303_Mag_Unified::enable_temperatureSensor(){
+  uint8_t reg = this->read8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_CRA_REG_M );
+  reg |= 0b10000000;
+  this->write8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_CRA_REG_M , reg );
+}
+
+
+//***************************************************************************
+// gets the temperature data
+//***************************************************************************
+int Adafruit_LSM303_Mag_Unified::get_temperatureData(){
+  uint8_t regH = this->read8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_TEMP_OUT_H_M );
+  uint8_t regL = this->read8( LSM303_ADDRESS_MAG , LSM303_REGISTER_MAG_TEMP_OUT_L_M );
+  
+  return ( ((short)( (regH << 8) | regL )) >> 4 );
+}
+
+
 
 /* --- The code below is no longer maintained and provided solely for */
 /* --- compatibility reasons! */

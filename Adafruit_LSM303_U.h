@@ -180,6 +180,8 @@ class Adafruit_LSM303_Mag_Unified : public Adafruit_Sensor
     void setMagRate(lsm303MagRate rate);
     bool getEvent(sensors_event_t*);
     void getSensor(sensor_t*);
+    void enable_temperatureSensor();  // enables the temperature sensor
+    int get_temperatureData();  // gets temperature data
 
     lsm303MagData   raw;     // Last read magnetometer data will be available here
     lsm303MagGain   magGain;
