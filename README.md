@@ -1,4 +1,4 @@
-#Adafruit LSM303DLHC Driver (Accelerometer + Magnetometer) #
+# Adafruit LSM303DLHC Driver (Accelerometer + Magnetometer)
 
 This driver is for the Adafruit LSM303 Breakout (http://www.adafruit.com/products/1120), and is based on Adafruit's Unified Sensor Library (Adafruit_Sensor).
 
