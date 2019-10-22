@@ -1,6 +1,6 @@
 # Adafruit LSM303DLHC Driver (Accelerometer + Magnetometer)
 
-This library has been replaced by
+This library has been replaced by the following libraries and will no longer be supported. Please switch to the new libraries.
 
 [Adafruit_LSM303_Accel](https://github.com/adafruit/Adafruit_LSM303_Accel) for the accelerometer and
 
